@@ -16,17 +16,22 @@
 #'
 restquery <- function(.endpoint, ..., .cache='.api_result', .parser=NULL, .quiet=FALSE) {
   # make URL
-  searchparams <- sapply(list(...), as.character, simplify = FALSE)
+  searchparams <- sapply(list(...), function(x) {
+    if(is.null(x)) {
+      return(NA)
+    } else if(is.na(x)) {
+      return(NA)
+    } else {
+      return(as.character(x))
+    }
+  }, simplify = FALSE)
   # verify search params are all named
   if(any(nchar(names(searchparams)) == 0)) stop("restquery only takes named parameters")
   # sorting ensures consistent url_hash with identical parameters
   params <- sapply(sort(names(searchparams)), function(item) {
-                     v <- searchparams[[item]]
-                     if(length(v) == 0) {
-                       return(NA)
-                     } else {
-                       paste(utils::URLencode(item), utils::URLencode(v), sep="=")
-                     }
+                    v <- searchparams[[item]]
+                    if(is.na(v)) return(NA)
+                    paste(utils::URLencode(item), utils::URLencode(v), sep="=")
                    })
   params <- params[!is.na(params)]
   url_string <- sprintf("%s?%s", .endpoint, paste(params, collapse="&"))
