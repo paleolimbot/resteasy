@@ -4,13 +4,13 @@
 \alias{restquery}
 \title{Query an endpoint and cache the data}
 \usage{
-restquery(..., .endpoint, .cache = ".api_result", .parser = NULL,
+restquery(.endpoint, ..., .cache = ".api_result", .parser = NULL,
   .quiet = FALSE)
 }
 \arguments{
-\item{...}{Key/value pairs to send to the query (will be passed through URLEncode)}
-
 \item{.endpoint}{The URL endpoint to send the query}
+
+\item{...}{Key/value pairs to send to the query (will be passed through URLEncode)}
 
 \item{.cache}{A variable name in .GlobalEnv to use as a cache (NULL to disable)}
 
@@ -25,7 +25,8 @@ The query result
 Query an endpoint and cache the data
 }
 \examples{
-restquery(key="HSkIMuOGlxFIOmfBCGFVA", title='catch-22', .endpoint="https://www.goodreads.com/book/title")
+restquery(.endpoint="https://www.goodreads.com/book/title",
+          key="HSkIMuOGlxFIOmfBCGFVA", title='catch-22')
 
 }
 

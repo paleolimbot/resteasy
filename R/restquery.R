@@ -11,16 +11,24 @@
 #' @export
 #'
 #' @examples
-#' restquery(key="HSkIMuOGlxFIOmfBCGFVA", title='catch-22', .endpoint="https://www.goodreads.com/book/title")
+#' restquery(.endpoint="https://www.goodreads.com/book/title",
+#'           key="HSkIMuOGlxFIOmfBCGFVA", title='catch-22')
 #'
-restquery <- function(..., .endpoint, .cache='.api_result', .parser=NULL, .quiet=FALSE) {
+restquery <- function(.endpoint, ..., .cache='.api_result', .parser=NULL, .quiet=FALSE) {
   # make URL
   searchparams <- sapply(list(...), as.character, simplify = FALSE)
   # verify search params are all named
   if(any(nchar(names(searchparams)) == 0)) stop("restquery only takes named parameters")
   # sorting ensures consistent url_hash with identical parameters
-  params <- sapply(sort(names(searchparams)),
-                   function(item) {paste(item, utils::URLencode(searchparams[[item]]), sep="=")})
+  params <- sapply(sort(names(searchparams)), function(item) {
+                     v <- searchparams[[item]]
+                     if(length(v) == 0) {
+                       return(NA)
+                     } else {
+                       paste(utils::URLencode(item), utils::URLencode(v), sep="=")
+                     }
+                   })
+  params <- params[!is.na(params)]
   url_string <- sprintf("%s?%s", .endpoint, paste(params, collapse="&"))
 
   lines <- NULL
@@ -34,26 +42,25 @@ restquery <- function(..., .endpoint, .cache='.api_result', .parser=NULL, .quiet
   # if there is no cached result, query the URL and parse
   if(is.null(lines) || is.null(.cache)) {
     if(!.quiet) message("Retreiving information from ", url_string)
-    connect <- url(url_string)
-    lines <- try(paste(readLines(connect, warn = FALSE), collapse=""), silent = TRUE)
-    close(connect)
-
+    connect <- try(httr::GET(url_string), silent=TRUE)
     # check for fail
-    if(class(lines) != "try-error") {
-      # store geocoded information in users global environment
+    if(class(connect) != "try-error") {
+      # try to get content
+      if(!.quiet) httr::warn_for_status(connect)
+      lines <- httr::content(connect, as="text")
+      # store response information
       if(!is.null(.cache)) {
         put_cached(.cache, url_string, lines)
       }
+    } else {
+      if(!.quiet) message("Unable to connect to ", url_string, ": ", as.character(connect))
     }
   }
 
-  if(class(lines) == "try-error") {
-    stop("Unable to connect to URL ", url_string)
+  if(is.null(.parser)) {
+    return(lines)
   } else {
-    if(is.null(.parser)) {
-      return(lines)
-    } else {
-      return(.parser(lines))
-    }
+    return(.parser(lines))
   }
+
 }
