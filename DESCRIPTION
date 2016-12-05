@@ -1,0 +1,11 @@
+Package: resteasy
+Type: Package
+Title: Easy Rest Query Fetching Parsing and Cacheing
+Version: 0.1
+Date: 2016-12-05
+Authors@R: person("Dewey", "Dunnington", email = "dewey@fishandwhistle.net", role = c("aut", "cre"))
+Description: Provides functions to easily query URLs with smart cacheing
+License: GPL-3
+Imports: digest
+LazyData: TRUE
+RoxygenNote: 5.0.1
