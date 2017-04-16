@@ -1,11 +1,12 @@
 Package: resteasy
 Type: Package
-Title: Easy Rest Query Fetching Parsing and Cacheing
-Version: 0.1
-Date: 2016-12-05
+Title: Easy REST Query Function Tools
+Version: 0.1.9000
+Date: 2017-04-15
 Authors@R: person("Dewey", "Dunnington", email = "dewey@fishandwhistle.net", role = c("aut", "cre"))
-Description: Provides functions to easily query URLs with smart cacheing
+Description: Because calling a REST API should be just like calling a regular R function.
 License: GPL-3
-Imports: digest, httr
+Imports: digest, httr, curl
+Suggests: testthat
 LazyData: TRUE
-RoxygenNote: 5.0.1
+RoxygenNote: 6.0.1
