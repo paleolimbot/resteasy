@@ -2,11 +2,11 @@ Package: resteasy
 Type: Package
 Title: Easy REST Query Function Tools
 Version: 0.1.9000
-Date: 2017-04-15
+Date: 2018-01-18
 Authors@R: person("Dewey", "Dunnington", email = "dewey@fishandwhistle.net", role = c("aut", "cre"))
 Description: Because calling a REST API should be just like calling a regular R function.
 License: GPL-3
-Imports: digest, httr, curl
+Imports: digest, httr, curl, purrr
 Suggests: testthat
 LazyData: TRUE
 RoxygenNote: 6.0.1
